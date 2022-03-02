@@ -37,7 +37,6 @@ namespace OSfirst
             }
             Console.Write("Task 2:");
             Console.Read();
-            // создаем каталог для файла
             string path = @"C:\OS1";
             DirectoryInfo dirInfo = new DirectoryInfo(path);
             if (!dirInfo.Exists)
@@ -53,20 +52,14 @@ namespace OSfirst
             Console.WriteLine("Введите строку для записи в файл:");
             string text = Console.ReadLine();
 
-                // запись в файл
             using (FileStream fstream = new FileStream($@"{path}\test.txt", FileMode.Append))
             {
                 byte[] array = System.Text.Encoding.Default.GetBytes(text);
-                // асинхронная запись массива байтов в файл
                 await fstream.WriteAsync(array, 0, array.Length);
-                //Console.WriteLine("Текст записан в файл");
             }
-
-                // чтение из файла
             using (FileStream fstream = File.OpenRead($@"{path}\test.txt"))
             {
                 byte[] array = new byte[fstream.Length];
-                // асинхронное чтение файла
                 await fstream.ReadAsync(array, 0, array.Length);
 
                 string textFromFile = System.Text.Encoding.Default.GetString(array);
@@ -110,7 +103,6 @@ namespace OSfirst
                     new XElement("age", 21))));
             xdoc.Save($@"{path}\people.xml");
             Console.WriteLine("people.xml created");
-
             Console.WriteLine("Введите имя для добавления в файл:");
             string tempname = Console.ReadLine();
             Console.WriteLine("Введите компанию для добавления в файл:");
@@ -165,7 +157,6 @@ namespace OSfirst
             File.Delete($@"{path}\people.xml");
             Console.WriteLine("Файл people.xml удалён");
             Console.WriteLine();
-
 
             Console.Write("Task 5:");
             Console.Read();
