@@ -1,3 +1,2 @@
 # OS
-Practice on Operating System
-Gribanov Egor
+Practice on Operating System ft. Gribanov Egor
