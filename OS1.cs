@@ -13,13 +13,14 @@ namespace OSfirst
 {
     class Person
     {
-        public string Name {get; set;}
-        public int Age {get; set;}
+        public string Name { get; set; }
+        public int Age { get; set; }
     }
     class Program
     {
         static async Task Main(string[] args)
         {
+            string Check1, Check2, Check3, Check4, Check5;
             Console.Write("Task 1:");
             Console.ReadLine();
             DriveInfo[] drives = DriveInfo.GetDrives();
@@ -65,11 +66,14 @@ namespace OSfirst
                 string textFromFile = System.Text.Encoding.Default.GetString(array);
                 Console.WriteLine($"Текст из файла: {textFromFile}");
             }
-
-            File.Delete($@"{path}\test.txt");
-            Console.WriteLine("Файл test.txt удалён");
+            Console.WriteLine("Хотите удалить файл?(+)");
+            Check1 = Console.ReadLine();
+            if (Check1 == "+")
+            {
+                File.Delete($@"{path}\test.txt");
+                Console.WriteLine("Файл test.txt удалён");
+            }
             Console.WriteLine();
-
             Console.Write("Task 3:");
             Console.Read();
             using (FileStream fstream = new FileStream($@"{path}\user.json", FileMode.OpenOrCreate))
@@ -83,11 +87,17 @@ namespace OSfirst
                 Person restoredPerson = await JsonSerializer.DeserializeAsync<Person>(fstream);
                 Console.WriteLine($"Name: {restoredPerson.Name}  Age: {restoredPerson.Age}");
             }
-            File.Delete($@"{path}\user.json");
-            Console.WriteLine("Файл user.json удалён");
-            Console.WriteLine();
+            Console.WriteLine("Хотите удалить файл?(+)");
             Console.Read();
-
+            Check1 = Console.ReadLine();
+            switch (Check1)
+            {
+                case "+":
+                    File.Delete($@"{path}\user.json");
+                    Console.WriteLine("Файл user.json удалён");
+                    break;
+            }
+            Console.WriteLine();
             Console.Write("Task 4:");
             Console.Read();
             Console.WriteLine();
@@ -154,9 +164,14 @@ namespace OSfirst
                 }
                 Console.WriteLine();
             }
-            File.Delete($@"{path}\people.xml");
-            Console.WriteLine("Файл people.xml удалён");
-            Console.WriteLine();
+            Console.WriteLine("Хотите удалить файл?(+)");
+            Check3 = Console.ReadLine();
+            if (Check3 == "+")
+            {
+                File.Delete($@"{path}\people.xml");
+                Console.WriteLine("Файл people.xml удалён");
+                Console.WriteLine();
+            }
 
             Console.Write("Task 5:");
             Console.Read();
@@ -168,7 +183,7 @@ namespace OSfirst
                 dirInfoo.Create();
             }
             Console.Read();
-            using (FileStream fstream = new FileStream($@"{path}\keks.txt", FileMode.CreateNew)){}
+            using (FileStream fstream = new FileStream($@"{path}\test2.txt", FileMode.CreateNew)) { }
             string sourceFolder = @"C:\OS1\zip\";
             string zipFile = @"C:\OS1\zip.zip";
             ZipFile.CreateFromDirectory(sourceFolder, zipFile);
@@ -176,24 +191,34 @@ namespace OSfirst
             Console.Read();
             using (ZipArchive zipArchive = ZipFile.Open(zipFile, ZipArchiveMode.Update))
             {
-                zipArchive.CreateEntryFromFile(@"C:\OS1\keks.txt", "keks.txt");
+                zipArchive.CreateEntryFromFile(@"C:\OS1\test2.txt", "test2.txt");
             }
             Console.Read();
-            Console.Write($"keks.txt добавлен в архив {zipFile}\n");
+            Console.Write($"test2.txt добавлен в архив {zipFile}\n");
             Console.Read();
             ZipFile.ExtractToDirectory(zipFile, sourceFolder);
             Console.WriteLine($"Архив {zipFile} распакован в папку {sourceFolder}");
             Console.WriteLine();
             Console.Read();
-            foreach (FileInfo file in dirInfo.GetFiles())
+            Console.WriteLine("Хотите удалить файлы?(+)");
+            Check4 = Console.ReadLine();
+            if (Check4 == "+")
             {
-                file.Delete();
+                foreach (FileInfo file in dirInfo.GetFiles())
+                {
+                    file.Delete();
+                }
+                Directory.Delete(sourceFolder, true);
+                Console.WriteLine("Файлы из Task 5 удалены");
+                Console.Read();
             }
-            Directory.Delete(sourceFolder, true);
-            Console.WriteLine("Файлы из Task 5 удалены");
-            Console.Read();
-            Directory.Delete(path, true);
-            Console.WriteLine("OS1 удалена с вашего компьютера ;)))");
+            Console.WriteLine("Удаляём всё нами созданное?(+)");
+            Check5 = Console.ReadLine();
+            if (Check5 == "+")
+            {
+                Directory.Delete(path, true);
+                Console.WriteLine("OS1 успешно удалена с вашего компьютера ;)))");
+            }
         }
     }
 }
