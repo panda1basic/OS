@@ -24,7 +24,6 @@ namespace OS2 {
             }
             return hash.ToString();
         }
-
         static void Theads(string s)
         {
             switch (s)
@@ -104,7 +103,6 @@ namespace OS2 {
                     break;
             }
         }
-
         //Вызов метода для построения хеша на основании пароля и сравнение полученного хеша с заданными
         static bool CompareHash(string password) {
             string hash = GetHash(password);
@@ -116,7 +114,6 @@ namespace OS2 {
             } else
                 return false;
         }
-
         //Брутфорс и вызов метода сравнеия хеша полученной последовательности с эталонными хешами
         static void NextSequence(object beginEnd) {
             var temp = (char[]) beginEnd;
@@ -139,13 +136,11 @@ namespace OS2 {
             }
             //Console.WriteLine("Поток " + temp[2] + " завершил работу.");
         }
-
         static void Main(string[] args) {
             nFoundPasswords = 0;
             alphabet = new char[26]; //Заполняем массив символов, которые могут быть в пароле
             for (char i = 'a'; i <= 'z'; i++)
                 alphabet[i - 'a'] = i;
-
             //Задаем эталонные хеши
             dictPasswords = new Dictionary < string, string > ();
             dictPasswords.Add("1115dd800feaacefdf481f1f9070374a2a81e27880f187396db67958b207cbad", ""); // zyzzx
