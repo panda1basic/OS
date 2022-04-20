@@ -14,7 +14,6 @@ namespace OS3 {
         static Thread[] consumers; //Массив потоков потребителей
         static Mutex mutex; //Мьютекс для работы с потоками и циклами
         static bool manufacturersIsOver; //Пора останавливать потоки производителей и запускать потоки потребителей
-
         //Метод для потоков производителей
         static void Manufacturer() {
             int value;
@@ -29,7 +28,6 @@ namespace OS3 {
             }
             Console.WriteLine(Thread.CurrentThread.Name + "Закончил работу\n");
         }
-
         static void Dequeue() {
             mutex.WaitOne(); //Синхронизация потоков(на момент queue.Count поток знает, допустим, что в очереди остался один элемент, а другой поток уже успел удалить, при попытке удаления пустого эл-та = ошибка)
             if (queue.Count > 0) {
@@ -38,7 +36,6 @@ namespace OS3 {
             }
             mutex.ReleaseMutex(); //Возвращение параллельной работы потоков
         }
-
         //Метод для потоков потребителей
         static void Consumer() {
             while (true) {
@@ -56,7 +53,6 @@ namespace OS3 {
             }
             Console.WriteLine(Thread.CurrentThread.Name + "Закончил работу\n");
         }
-
         static void Main(string[] args) {
             int nGenerator = 3, nConsumer = 2; //Количество потоков производителей и потребителей
             manufacturersIsOver = false;
@@ -65,9 +61,7 @@ namespace OS3 {
             randomNum = new Random();
             manufacturers = new Thread[nGenerator];
             consumers = new Thread[nConsumer];
-
             Console.WriteLine("Нажмите 'q', чтобы остановить потоки производителей.");
-
             for (int i = 0; i < nGenerator; i++) {
                 manufacturers[i] = new Thread(new ThreadStart(Manufacturer));
                 manufacturers[i].Name = "Производитель #" + (i + 1) + "\n";
@@ -78,13 +72,11 @@ namespace OS3 {
                 consumers[i].Name = "Потребитель #" + (i + 1) + "\n";
                 consumers[i].Start();
             }
-
             char key = ' ';
             while (key != 'q') {
                 key = (char) Console.Read();
             }
             manufacturersIsOver = true;
-
             Console.ReadKey();
         }
     }
