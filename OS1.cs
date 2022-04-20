@@ -8,28 +8,27 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
 
-
-namespace OSfirst
-{
-    class Person
-    {
-        public string Name { get; set; }
-        public int Age { get; set; }
+namespace OS1 {
+    class Person {
+        public string Name {
+            get;
+            set;
+        }
+        public int Age {
+            get;
+            set;
+        }
     }
-    class Program
-    {
-        static async Task Main(string[] args)
-        {
+    class Program {
+        static async Task Main(string[] args) {
             string Check1, Check2, Check3, Check4, Check5;
             Console.Write("Task 1:");
             Console.ReadLine();
             DriveInfo[] drives = DriveInfo.GetDrives();
-            foreach (DriveInfo drive in drives)
-            {
+            foreach(DriveInfo drive in drives) {
                 Console.WriteLine($"Название: {drive.Name}");
                 Console.WriteLine($"Тип: {drive.DriveType}");
-                if (drive.IsReady)
-                {
+                if (drive.IsReady) {
                     Console.WriteLine($"Объем диска: {drive.TotalSize}");
                     Console.WriteLine($"Свободное пространство: {drive.TotalFreeSpace}");
                     Console.WriteLine($"Метка: {drive.VolumeLabel}");
@@ -38,28 +37,23 @@ namespace OSfirst
             }
             Console.Write("Task 2:");
             Console.Read();
-            string path = @"C:\OS1";
+            string path = @ "C:\OS1";
             DirectoryInfo dirInfo = new DirectoryInfo(path);
-            if (!dirInfo.Exists)
-            {
+            if (!dirInfo.Exists) {
                 dirInfo.Create();
                 Console.WriteLine("Папка успешно создана");
-            }
-            else
-            {
+            } else {
                 Console.WriteLine("Папка уже существует");
             }
             Console.Read();
             Console.WriteLine("Введите строку для записи в файл:");
             string text = Console.ReadLine();
 
-            using (FileStream fstream = new FileStream($@"{path}\test.txt", FileMode.Append))
-            {
+            using(FileStream fstream = new FileStream($ @ "{path}\test.txt", FileMode.Append)) {
                 byte[] array = System.Text.Encoding.Default.GetBytes(text);
                 await fstream.WriteAsync(array, 0, array.Length);
             }
-            using (FileStream fstream = File.OpenRead($@"{path}\test.txt"))
-            {
+            using(FileStream fstream = File.OpenRead($ @ "{path}\test.txt")) {
                 byte[] array = new byte[fstream.Length];
                 await fstream.ReadAsync(array, 0, array.Length);
 
@@ -68,34 +62,32 @@ namespace OSfirst
             }
             Console.WriteLine("Хотите удалить файл?(+)");
             Check1 = Console.ReadLine();
-            if (Check1 == "+")
-            {
-                File.Delete($@"{path}\test.txt");
+            if (Check1 == "+") {
+                File.Delete($ @ "{path}\test.txt");
                 Console.WriteLine("Файл test.txt удалён");
             }
             Console.WriteLine();
             Console.Write("Task 3:");
             Console.Read();
-            using (FileStream fstream = new FileStream($@"{path}\user.json", FileMode.OpenOrCreate))
-            {
-                Person Egor = new Person() { Name = "Egor", Age = 19 };
-                await JsonSerializer.SerializeAsync<Person>(fstream, Egor);
+            using(FileStream fstream = new FileStream($ @ "{path}\user.json", FileMode.OpenOrCreate)) {
+                Person Egor = new Person() {
+                    Name = "Egor", Age = 19
+                };
+                await JsonSerializer.SerializeAsync < Person > (fstream, Egor);
                 Console.WriteLine("Файл был создан и уже содержит данные");
             }
-            using (FileStream fstream = File.OpenRead($@"{path}\user.json"))
-            {
-                Person restoredPerson = await JsonSerializer.DeserializeAsync<Person>(fstream);
+            using(FileStream fstream = File.OpenRead($ @ "{path}\user.json")) {
+                Person restoredPerson = await JsonSerializer.DeserializeAsync < Person > (fstream);
                 Console.WriteLine($"Name: {restoredPerson.Name}  Age: {restoredPerson.Age}");
             }
             Console.WriteLine("Хотите удалить файл?(+)");
             Console.Read();
             Check1 = Console.ReadLine();
-            switch (Check1)
-            {
-                case "+":
-                    File.Delete($@"{path}\user.json");
-                    Console.WriteLine("Файл user.json удалён");
-                    break;
+            switch (Check1) {
+            case "+":
+                File.Delete($ @ "{path}\user.json");
+                Console.WriteLine("Файл user.json удалён");
+                break;
             }
             Console.WriteLine();
             Console.Write("Task 4:");
@@ -111,7 +103,7 @@ namespace OSfirst
                     new XAttribute("name", "Vova"),
                     new XElement("company", "Google"),
                     new XElement("age", 21))));
-            xdoc.Save($@"{path}\people.xml");
+            xdoc.Save($ @ "{path}\people.xml");
             Console.WriteLine("people.xml created");
             Console.WriteLine("Введите имя для добавления в файл:");
             string tempname = Console.ReadLine();
@@ -120,8 +112,8 @@ namespace OSfirst
             Console.WriteLine("Введите возраст для добавления в файл:");
             string tempage = Console.ReadLine();
             XmlDocument xDoc = new XmlDocument();
-            xDoc.Load($@"{path}\people.xml");
-            XmlElement? xRoot = xDoc.DocumentElement;
+            xDoc.Load($ @ "{path}\people.xml");
+            XmlElement ? xRoot = xDoc.DocumentElement;
             XmlElement personElem = xDoc.CreateElement("people");
             XmlAttribute nameAttr = xDoc.CreateAttribute("name");
             XmlElement companyElem = xDoc.CreateElement("company");
@@ -136,29 +128,24 @@ namespace OSfirst
             personElem.AppendChild(companyElem);
             personElem.AppendChild(ageElem);
             xRoot?.AppendChild(personElem);
-            xDoc.Save($@"{path}\people.xml");
+            xDoc.Save($ @ "{path}\people.xml");
 
             Console.WriteLine("people.xml edited\n");
 
             XmlDocument xxDoc = new XmlDocument();
-            xDoc.Load($@"{path}\people.xml");
+            xDoc.Load($ @ "{path}\people.xml");
             XmlElement xxRoot = xDoc.DocumentElement;
-            foreach (XmlNode xnode in xRoot)
-            {
-                if (xnode.Attributes.Count > 0)
-                {
+            foreach(XmlNode xnode in xRoot) {
+                if (xnode.Attributes.Count > 0) {
                     XmlNode attr = xnode.Attributes.GetNamedItem("name");
                     if (attr != null)
                         Console.WriteLine(attr.Value);
                 }
-                foreach (XmlNode childnode in xnode.ChildNodes)
-                {
-                    if (childnode.Name == "company")
-                    {
+                foreach(XmlNode childnode in xnode.ChildNodes) {
+                    if (childnode.Name == "company") {
                         Console.WriteLine($"Компания: {childnode.InnerText}");
                     }
-                    if (childnode.Name == "age")
-                    {
+                    if (childnode.Name == "age") {
                         Console.WriteLine($"Возраст: {childnode.InnerText}");
                     }
                 }
@@ -166,9 +153,8 @@ namespace OSfirst
             }
             Console.WriteLine("Хотите удалить файл?(+)");
             Check3 = Console.ReadLine();
-            if (Check3 == "+")
-            {
-                File.Delete($@"{path}\people.xml");
+            if (Check3 == "+") {
+                File.Delete($ @ "{path}\people.xml");
                 Console.WriteLine("Файл people.xml удалён");
                 Console.WriteLine();
             }
@@ -176,22 +162,20 @@ namespace OSfirst
             Console.Write("Task 5:");
             Console.Read();
             Console.WriteLine();
-            string somepath = @"C:\OS1\zip";
+            string somepath = @ "C:\OS1\zip";
             DirectoryInfo dirInfoo = new DirectoryInfo(somepath);
-            if (!dirInfoo.Exists)
-            {
+            if (!dirInfoo.Exists) {
                 dirInfoo.Create();
             }
             Console.Read();
-            using (FileStream fstream = new FileStream($@"{path}\test2.txt", FileMode.CreateNew)) { }
-            string sourceFolder = @"C:\OS1\zip\";
-            string zipFile = @"C:\OS1\zip.zip";
+            using(FileStream fstream = new FileStream($ @ "{path}\test2.txt", FileMode.CreateNew)) {}
+            string sourceFolder = @ "C:\OS1\zip\";
+            string zipFile = @ "C:\OS1\zip.zip";
             ZipFile.CreateFromDirectory(sourceFolder, zipFile);
             Console.WriteLine($"Папка {sourceFolder} создана и конвертирована в архив {zipFile}");
             Console.Read();
-            using (ZipArchive zipArchive = ZipFile.Open(zipFile, ZipArchiveMode.Update))
-            {
-                zipArchive.CreateEntryFromFile(@"C:\OS1\test2.txt", "test2.txt");
+            using(ZipArchive zipArchive = ZipFile.Open(zipFile, ZipArchiveMode.Update)) {
+                zipArchive.CreateEntryFromFile(@ "C:\OS1\test2.txt", "test2.txt");
             }
             Console.Read();
             Console.Write($"test2.txt добавлен в архив {zipFile}\n");
@@ -202,10 +186,8 @@ namespace OSfirst
             Console.Read();
             Console.WriteLine("Хотите удалить файлы?(+)");
             Check4 = Console.ReadLine();
-            if (Check4 == "+")
-            {
-                foreach (FileInfo file in dirInfo.GetFiles())
-                {
+            if (Check4 == "+") {
+                foreach(FileInfo file in dirInfo.GetFiles()) {
                     file.Delete();
                 }
                 Directory.Delete(sourceFolder, true);
@@ -214,8 +196,7 @@ namespace OSfirst
             }
             Console.WriteLine("Удаляём всё нами созданное?(+)");
             Check5 = Console.ReadLine();
-            if (Check5 == "+")
-            {
+            if (Check5 == "+") {
                 Directory.Delete(path, true);
                 Console.WriteLine("OS1 успешно удалена с вашего компьютера ;)))");
             }
