@@ -10,18 +10,13 @@ using System.Xml.Linq;
 
 namespace OS1 {
     class Person {
-        public string Name {
-            get;
-            set;
-        }
-        public int Age {
-            get;
-            set;
-        }
+        public string Name {get; set;}
+        public int Age {get; set;}
     }
     class Program {
         static async Task Main(string[] args) {
             string Check1, Check2, Check3, Check4, Check5;
+            //Задание 1
             Console.Write("Task 1:");
             Console.ReadLine();
             DriveInfo[] drives = DriveInfo.GetDrives();
@@ -35,6 +30,7 @@ namespace OS1 {
                 }
                 Console.WriteLine();
             }
+            //Задание 2
             Console.Write("Task 2:");
             Console.Read();
             string path = @ "C:\OS1";
@@ -67,6 +63,7 @@ namespace OS1 {
                 Console.WriteLine("Файл test.txt удалён");
             }
             Console.WriteLine();
+            //Задание 3
             Console.Write("Task 3:");
             Console.Read();
             using(FileStream fstream = new FileStream($ @ "{path}\user.json", FileMode.OpenOrCreate)) {
@@ -90,6 +87,7 @@ namespace OS1 {
                 break;
             }
             Console.WriteLine();
+            //Задание 4
             Console.Write("Task 4:");
             Console.Read();
             Console.WriteLine();
@@ -129,9 +127,7 @@ namespace OS1 {
             personElem.AppendChild(ageElem);
             xRoot?.AppendChild(personElem);
             xDoc.Save($ @ "{path}\people.xml");
-
             Console.WriteLine("people.xml edited\n");
-
             XmlDocument xxDoc = new XmlDocument();
             xDoc.Load($ @ "{path}\people.xml");
             XmlElement xxRoot = xDoc.DocumentElement;
@@ -158,7 +154,7 @@ namespace OS1 {
                 Console.WriteLine("Файл people.xml удалён");
                 Console.WriteLine();
             }
-
+            //Задание 5
             Console.Write("Task 5:");
             Console.Read();
             Console.WriteLine();
