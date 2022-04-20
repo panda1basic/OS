@@ -5,41 +5,22 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-
-namespace Pract2
-{
-    //Напечатайте каждый соответствующий пароль вместе с его хешем SHA-256.
-    //Количество потоков от 2 до 7.
-
-    class Program
-    {
-        /// Количество хешей и, следовательно, паролей, которые надо найти
-        static readonly int nHash = 3;
-        /// Количество уже найденных паролей
-        static int nFoundPasswords;
-        /// Словарь, где ключ - хеш, значение - пароль
-        static Dictionary<string, string> dictPasswords;
-        /// Алфавит, который содержит все символы, которые могут быть в пароле
-        /// В данном случае, английский алфавит в строчном регистре
-        static char[] alphabet;
-        /// Время запуска потоков
-        static DateTime dateTimeBegin;
-        /// Генерирвание хеша
-        /// <param name="str">Пароль</param>
-        /// <returns>Хеш</returns>
-        static string GetHash(string str)
-        {
+namespace OS2 {
+    class Program {
+        static readonly int nHash = 3; //Количество хешей
+        static int nFoundPasswords; //Количество уже найденных паролей
+        static Dictionary < string, string > dictPasswords; //Словарь, где ключ - хеш, значение - пароль
+        static char[] alphabet; //Алфавит, который содержит все символы, которые могут быть в пароле(английский в нижнем регистре)
+        static DateTime dateTimeBegin; //Время запуска потоков
+        //Генерирвание хеша
+        static string GetHash(string str) {
             StringBuilder hash = new StringBuilder();
-            using (SHA256 sha256 = SHA256Managed.Create())
-            {
-                // Используется ASCII кодировка, как и сказано в задании 
-                Encoding enc = Encoding.ASCII;
-                // Хеширование требует массив байтов на вход, поэтому преобразовываем строку с паролем в массив байтов
-                byte[] baResult = sha256.ComputeHash(enc.GetBytes(str));
-                // Хеширование возвращает массив байтов, поэтому преобрзовываем хеш в строку
-                foreach (byte b in baResult)
-                    // b.ToString("x2") - один байт конвертируется в число 16-ой системы счисления (как и требуется для хеша)
-                    hash.Append(b.ToString("x2"));
+            using(SHA256 sha256 = SHA256Managed.Create()) {
+                Encoding enc = Encoding.ASCII; //ASCII кодировка
+                byte[] baResult = sha256.ComputeHash(enc.GetBytes(str)); //Преобразовываем строку с паролем в массив байтов
+                //Преобрзовываем хеш в строку
+                foreach(byte b in baResult)
+                hash.Append(b.ToString("x2")); //Байт конвертируется в число 16-ой системы счисления
             }
             return hash.ToString();
         }
@@ -124,94 +105,61 @@ namespace Pract2
             }
         }
 
-
-        /// Вызов метода для построения хеша на основании пароля. 
-        /// Сравнение полученного хеша с заданными.
-
-        /// <param name="password">Пароль</param>
-        /// <returns>Признак равенства хеша password и одного из заданных хешей</returns>
-        static bool CompareHash(string password)
-        {
+        //Вызов метода для построения хеша на основании пароля и сравнение полученного хеша с заданными
+        static bool CompareHash(string password) {
             string hash = GetHash(password);
-            if (dictPasswords.ContainsKey(hash))
-            {
+            if (dictPasswords.ContainsKey(hash)) {
                 dictPasswords[hash] = password.ToString();
                 nFoundPasswords++;
                 Console.WriteLine("Пароль: " + dictPasswords[hash] + ".\n Хэш: " + hash);
                 return true;
-            }
-            else
+            } else
                 return false;
         }
 
-
-        /// Выполняется полный перебор (брутфорс). 
-        /// Вызывается метода сравнения хеша полученной последовательности с эталонными хешами.
-
-        /// <param name="beginEnd">
-        /// Объект, который должен являться массивом символов.
-        /// Первый символ определяет, с какой буквы начинается первый пароль
-        /// Второй символ определяет, на какую букву заканчивается последний пароль
-        /// Третий символ определяет номер потока, в котором раотает метод
-
-        static void NextSequence(object beginEnd)
-        {
-            var temp = (char[])beginEnd;
-
+        //Брутфорс и вызов метода сравнеия хеша полученной последовательности с эталонными хешами
+        static void NextSequence(object beginEnd) {
+            var temp = (char[]) beginEnd;
             string sequence;
             for (char i1 = temp[0]; i1 <= temp[1]; i1++)
-                foreach (var i2 in alphabet)
-                    foreach (var i3 in alphabet)
-                        foreach (var i4 in alphabet)
-                            foreach (var i5 in alphabet)
-                            {
-                                sequence = string.Concat(i1, i2, i3, i4, i5);
-                                //Int32 faketimer = (DateTime.Now - dateTimeBegin).Seconds;
-                                int faketimer = (DateTime.Now - dateTimeBegin).Seconds;
-                                if (CompareHash(sequence))
-                                {
-                                    Console.WriteLine("С запуска потоков и до нахождения пароля прошло " + faketimer + " сек.\n");
-                                }
-                                if (nFoundPasswords == nHash)
-                                {
-                                    //Console.WriteLine("Поток " + temp[2] + " завершил работу.");
-                                    return;
-                                }
-                            }
+                foreach(var i2 in alphabet)
+            foreach(var i3 in alphabet)
+            foreach(var i4 in alphabet)
+            foreach(var i5 in alphabet) {
+                sequence = string.Concat(i1, i2, i3, i4, i5);
+                //Int32 faketimer = (DateTime.Now - dateTimeBegin).Seconds;
+                int faketimer = (DateTime.Now - dateTimeBegin).Seconds;
+                if (CompareHash(sequence)) {
+                    Console.WriteLine("С запуска потоков и до нахождения пароля прошло " + faketimer + " сек.\n");
+                }
+                if (nFoundPasswords == nHash) {
+                    //Console.WriteLine("Поток " + temp[2] + " завершил работу.");
+                    return;
+                }
+            }
             //Console.WriteLine("Поток " + temp[2] + " завершил работу.");
         }
 
-        static void Main(string[] args)
-        {
+        static void Main(string[] args) {
             nFoundPasswords = 0;
-            // Заполняем массив символов, которые могут быть в пароле
-            alphabet = new char[26];
+            alphabet = new char[26]; //Заполняем массив символов, которые могут быть в пароле
             for (char i = 'a'; i <= 'z'; i++)
                 alphabet[i - 'a'] = i;
 
-            // Задаем эталонные хеши
-            dictPasswords = new Dictionary<string, string>();
+            //Задаем эталонные хеши
+            dictPasswords = new Dictionary < string, string > ();
             dictPasswords.Add("1115dd800feaacefdf481f1f9070374a2a81e27880f187396db67958b207cbad", ""); // zyzzx
             dictPasswords.Add("3a7bd3e2360a3d29eea436fcfb7e44c735d117c42d1c1835420b6b9942dd4f1b", ""); // apple
             dictPasswords.Add("74e1bb62f8dabb8125a58852b63bdf6eaef667cb56ac7f7cdba6d7305c50a22f", ""); // mmmmm
-
             dateTimeBegin = DateTime.Now;
-            // Объявление потоков
-
-            ///////Конец//////////
-
-            // Запуск потоков
             Console.WriteLine("Введите кол-во потоков: ");
             string s = Console.ReadLine(); // Ввод с клавиатуры
-            
-            if ((s == "2") | (s == "3") | (s == "4") | (s == "5") | (s == "6") | (s == "7"))
-            {
+            // :D
+            if ((s == "1") || (s == "2") || (s == "3") || (s == "4") || (s == "5") || (s == "6") || (s == "7")) {
                 Console.WriteLine("Запущены " + s + " потоков. Пожалуйста, ожидайте окончания их выполнения...\n");
                 Console.ReadKey();
                 Theads(s);
-            }
-            else
-            {
+            } else {
                 Console.WriteLine("Неправильный ввод! От 1 до 7 потоков");
                 Console.ReadKey();
             }
